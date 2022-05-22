@@ -21,6 +21,13 @@ Interpreters vary in size and complexity:
 
 You'll write an interpreter that will parse the input, build an abstract syntax tree (AST), and then evaluate the AST. This type of interpreter is sometimes called a tree-walking interpreter.
 
+Your interpreter will have the following major parts:
+- A lexer
+- A parser
+- An Abstract Syntax Tree (AST)
+- An internal object system
+- An evaluator
+
 You'll implement a language called Monkey, which has the following features:
 - C-like syntax
 - Variable bindings
@@ -32,13 +39,6 @@ You'll implement a language called Monkey, which has the following features:
 - A string data structure
 - An array data structure
 - A hash data structure
-
-Your interpreter will have the following major parts:
-- A lexer
-- A parser
-- An Abstract Syntax Tree (AST)
-- An internal object system
-- An evaluator
 
 ## The Tools You Will Use
 
