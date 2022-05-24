@@ -2,7 +2,7 @@
 
 ## What Is This?
 
-This repo will contain my study notes as I work through [*Writing an Interpreter in Go*](https://interpreterbook.com/) by [Thorsten Ball](https://twitter.com/thorstenball).
+This repo will contain my study notes and sample code as I work through [*Writing an Interpreter in Go*](https://interpreterbook.com/) by [Thorsten Ball](https://twitter.com/thorstenball).
 
 ## Why Am I Doing This?
 
