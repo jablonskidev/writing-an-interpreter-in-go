@@ -443,4 +443,52 @@ You now have a basic lexer that you can build on.
 
 ## Extending our Token Set and Lexer
 
+Now that you have a basic set of tokens as well as a lexer for those tokens, you can define more tokens and extend the lexer accordingly. 
+
+In this section, you'll add support for:
+- **One-character tokens:** 
+    - `!`
+    - `-`
+    - `/`
+    - `*`
+    - `<`
+    - `>`
+- **Two-character tokens:**
+    - `==`
+    - `!=`
+- **Keywords:**
+    - `true`
+    - `false`
+    - `if`
+    - `else`
+    - `return`
+
+Start with `-`, `/`, `*`, `<`, and `>`. Add these characters to your test case:
+
+```go
+// lexer/lexer_test.go
+
+func TestNextToken(t *testing.T) {
+    input := `let five = 5;
+let ten = 10;
+
+let add = fn(x, y) {
+    x + y;
+};
+
+let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
+`
+// [...]
+}
+```
+
+Although `!-/*5` doesn't make sense as Monkey code, that won't stop the lexer from turning the `input` into tokens. For lexers, write test cases that cover:
+- All tokens
+- Off-by-one errors
+- Edge cases at end-of-file
+- Newline handling
+- Multi-digit number parsing
+
 ## Start of a REPL
