@@ -491,4 +491,226 @@ Although `!-/*5` doesn't make sense as Monkey code, that won't stop the lexer fr
 - Newline handling
 - Multi-digit number parsing
 
+Now define tokens for the characters you added to the test:
+
+```go
+// token/token.go
+
+const (
+// [...]
+
+    // Operators
+    ASSIGN = "="
+    PLUS = "+"
+    MINUS = "-"
+    BANG = "!"
+    ASTERISK = "*"
+    SLASH = "/"
+    
+    LT = "<"
+    GT = ">"
+
+// [...]
+)
+```
+
+Now extend your switch statement in the `NextToken()` method of `Lexer` so the lexer can return the tokens with the expected `TokenType`:
+
+```go
+// lexer/lexer.go
+
+func (l *Lexer) NextToken() token.Token {
+// [...]
+    switch l.ch {
+    case '=':
+        tok = newToken(token.ASSIGN, l.ch)
+    case '+':
+        tok = newToken(token.PLUS, l.ch)
+    case '-':
+        tok = newToken(token.MINUS, l.ch)
+    case '!':
+        tok = newToken(token.BANG, l.ch)
+    case '/':
+        tok = newToken(token.SLASH, l.ch)
+    case '*':
+        tok = newToken(token.ASTERISK, l.ch)
+    case '<':
+        tok = newToken(token.LT, l.ch)
+    case '>':
+        tok = newToken(token.GT, l.ch)
+    case ';':
+        tok = newToken(token.SEMICOLON, l.ch)
+    case ',':
+        tok = newToken(token.COMMA, l.ch)
+// [...]
+}
+```
+Now that you've added tokens and changed the cases in the `switch` statement, your test should pass.
+
+You can now work on adding support for the keywords `true`, `false`, `if`, `else`, and `return`. Extend the `input` in your test to include the new keywords:
+
+```go
+// lexer/lexer_test.go
+
+func TestNextToken(t *testing.T) {
+    input := `let five = 5;
+let ten = 10;
+
+let add = fn(x, y) {
+    x + y;
+};
+
+let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
+
+if (5 < 10) {
+    return true;
+} else {
+    return false;
+}`
+// [...]
+}
+```
+
+Add the keywords to the lookup table for `LookupIdent()`:
+
+```go
+// token/token.go
+
+const (
+// [...]
+
+    // Keywords
+    FUNCTION = "FUNCTION"
+    LET = "LET"
+    TRUE = "TRUE"
+    FALSE = "FALSE"
+    IF = "IF"
+    ELSE = "ELSE"
+    RETURN = "RETURN"
+)
+
+var keywords = map[string]TokenType{
+    "fn": FUNCTION,
+    "let": LET,
+    "true": TRUE,
+    "false": FALSE,
+    "if": IF,
+    "else": ELSE,
+    "return": RETURN,
+}
+```
+The test should now pass. Now, you need to extend your lexer so it'll recognize tokens made of two characters:
+- `==`
+- `!=`
+
+Since your switch statement takes the current character `l.ch` as the expression to compare against the cases, you can’t just add new cases like `case '=='`. The compiler won’t
+let you. You can’t compare your `l.ch` byte with strings like `'=='`.
+Instead, you can reuse the existing branches for `'='` and `'!'` and extend them. You're going to look ahead in the input and then determine whether to return a
+token for `=` or `==`:
+
+```go
+// lexer/lexer_test.go
+func TestNextToken(t *testing.T) {
+
+    input := `let five = 5;
+
+let ten = 10;
+
+let add = fn(x, y) {
+    x + y;
+};
+
+let result = add(five, ten);
+!-/*5;
+5 < 10 > 5;
+
+if (5 < 10) {
+    return true;
+} else {
+    return false;
+}
+
+10 == 10;
+10 != 9;
+`
+// [...]
+}
+```
+Add a helper method defined on `*Lexer` called `peekChar()`:
+
+```go
+// lexer/lexer.go
+
+func (l *Lexer) peekChar() byte {
+    if l.readPosition >= len(l.input) {
+        return 0
+    } else {
+        return l.input[l.readPosition]
+    }
+}
+```
+
+`peekChar()` is similar to `readChar()`, but it doesn’t increment `l.position` and `l.readPosition`. You just want to “peek” ahead in the input rather than move around in it so
+that you'll know what a call to `readChar()` would return.
+
+Define the new tokens:
+
+```go
+// token/token.go
+
+const (
+    // [...]
+    
+    EQ = "=="
+    NOT_EQ = "!="
+
+// [...]
+)
+```
+Now that the references to `token.EQ` and `token.NOT_EQ` in the tests for the lexer are fixed, you'll get the correct failure message when you run `go test`:
+
+```
+$ go test ./lexer
+--- FAIL: TestNextToken (0.00s)
+  lexer_test.go:118: tests[66] - tokentype wrong. expected="==", got="="
+FAIL
+FAIL monkey/lexer 0.007s
+```
+
+When the lexer finds a `==` in the `input`, it sees it as two `token.ASSIGN` tokens rather than one `token.EQ` token. You can fix that with `peekChar()`:
+
+```go
+// lexer/lexer.go
+
+func (l *Lexer) NextToken() token.Token {
+// [...]
+    switch l.ch {
+    case '=':
+        if l.peekChar() == '=' {
+            ch := l.ch
+            l.readChar()
+            literal := string(ch) + string(l.ch)
+            tok = token.Token{Type: token.EQ, Literal: literal}
+        } else {
+            tok = newToken(token.ASSIGN, l.ch)
+        }
+// [...]
+    case '!':
+        if l.peekChar() == '=' {
+            ch := l.ch
+            l.readChar()
+            literal := string(ch) + string(l.ch)
+            tok = token.Token{Type: token.NOT_EQ, Literal: literal}
+        } else {
+            tok = newToken(token.BANG, l.ch)
+        }
+// [...]
+}
+```
+Since you save `l.ch` in a local variable before calling `l.readChar()` again, you don’t lose the current character and can move the lexer forward so it leaves the `NextToken()` with `l.position` and `l.readPosition` in the correct state. 
+
+Your test should now pass. You now have a lexer that produces all of the tokens that you've defined.
+
 ## Start of a REPL
