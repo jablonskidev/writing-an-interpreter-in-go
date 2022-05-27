@@ -5,7 +5,7 @@ Topics in this chapter:
 - [Lexical Analysis](#Lexical-Analysis)
 - [Defining our Tokens](#Defining-our-Tokens)
 - [The Lexer](#The-Lexer)
-- Extending our Token Set and Lexer
+- [Extending our Token Set and Lexer](#Extending-our-Token-Set-and-Lexer)
 - Start of a REPL
 
 ## Lexical Analysis
