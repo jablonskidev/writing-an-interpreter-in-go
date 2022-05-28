@@ -6,7 +6,7 @@ Topics in this chapter:
 - [Defining our Tokens](#Defining-our-Tokens)
 - [The Lexer](#The-Lexer)
 - [Extending our Token Set and Lexer](#Extending-our-Token-Set-and-Lexer)
-- Start of a REPL
+- [Start of a REPL](#Start-of-a-REPL)
 
 ## Lexical Analysis
 
@@ -714,3 +714,107 @@ Since you save `l.ch` in a local variable before calling `l.readChar()` again, y
 Your test should now pass. You now have a lexer that produces all of the tokens that you've defined.
 
 ## Start of a REPL
+
+REPL stands for Read Eval Print Loop. It is sometimes referred to as a console or interactive mode.
+
+A REPL:
+- Reads input
+- Sends the input to the interpreter for evaluation
+- Prints the output of the
+interpreter
+- Starts the process again
+
+Although you can't eval Monkey source code yet, you can tokenize it. Parsing and evaluation will come later. Start by making a REPL that tokenizes Monkey source code and prints the tokens:
+
+```go
+// repl/repl.go
+
+package repl
+    
+import (
+    "bufio"
+    "fmt"
+    "io"
+    "monkey/lexer"
+    "monkey/token"
+)
+
+const PROMPT = ">> "
+
+func Start(in io.Reader, out io.Writer) {
+    scanner := bufio.NewScanner(in)
+
+    for {
+        fmt.Fprintf(out, PROMPT)
+        scanned := scanner.Scan()
+        if !scanned {
+            return
+        }
+
+        line := scanner.Text()
+        l := lexer.New(line)
+
+        for tok := l.NextToken(); tok.Type != token.EOF; tok = l.NextToken() {
+            fmt.Fprintf(out, "%+v\n", tok)
+        }
+    }
+}
+```
+
+Here are the steps:
+- Read the input until you find a newline
+- Take the line that was just read and pass it to an instance of your lexer
+- Print all the tokens the lexer gives us until  reaching EOF
+
+Make a `main.go` file to start the REPL and greet the user:
+
+```go
+// main.go
+
+package main
+
+import (
+    "fmt"
+    "os"
+    "os/user"
+    "monkey/repl"
+)
+
+func main() {
+    user, err := user.Current()
+    if err != nil {
+        panic(err)
+    }
+    fmt.Printf("Hello %s! This is the Monkey programming language!\n", user.Username)
+    fmt.Printf("Feel free to type in commands\n")
+    repl.Start(os.Stdin, os.Stdout)
+}
+```
+
+You can now produce tokens interactively:
+
+```
+$ go run main.go
+Hello mrnugget! This is the Monkey programming language!
+Feel free to type in commands
+>> let add = fn(x, y) { x + y; };
+{Type:LET Literal:let}
+{Type:IDENT Literal:add}
+{Type:= Literal:=}
+{Type:FUNCTION Literal:fn}
+{Type:( Literal:(}
+{Type:IDENT Literal:x}
+{Type:, Literal:,}
+{Type:IDENT Literal:y}
+{Type:) Literal:)}
+{Type:{ Literal:{}
+{Type:IDENT Literal:x}
+{Type:+ Literal:+}
+{Type:IDENT Literal:y}
+{Type:; Literal:;}
+{Type:} Literal:}}
+{Type:; Literal:;}
+>>
+```
+
+Your next step is to parse tokens.
