@@ -1,5 +1,7 @@
 # Lexing
 
+> **_NOTE:_** To skip to the code for this chapter, go to [writing-an-interpreter-in-go/2-lexing/src/monkey/](https://github.com/jablonskidev/writing-an-interpreter-in-go/tree/main/2-lexing/src/monkey).
+
 Topics in this chapter:
 
 - [Lexical Analysis](#Lexical-Analysis)
