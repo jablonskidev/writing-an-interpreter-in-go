@@ -2,8 +2,8 @@
 
 Topics in this chapter:
 - [Parsers](#Parsers)
-- Why Not a Parser Generator?
-- Writing a Parser for the Monkey Programming Language
+- [Why Not a Parser Generator](#Why-Not-a-Parser-Generator)
+- [Writing a Parser for the Monkey Programming Language](#Writing-a-Parser-for-the-Monkey-Programming-Language)
 - Parser's First Steps: Parsing let Statements
 - Parsing return Statements
 - Parsing Expressions
@@ -34,7 +34,7 @@ For most interpreters, this data structure is called a **syntax tree** or an **a
 
 In this chapter, you'll write a parser for the Monkey programming language. The parser's input will be the tokens you defined and wrote a lexer for in [Lexing](https://github.com/jablonskidev/writing-an-interpreter-in-go/blob/main/2-lexing/lexing.md). You'll define an AST and construct instances of this AST while recursively parsing tokens.
 
-## Why Not a Parser Generator?
+## Why Not a Parser Generator
 
 A **parser generator** is a tool that takes a formal description of a language and produces a parser.
 
