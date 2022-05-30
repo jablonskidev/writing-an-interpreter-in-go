@@ -53,6 +53,62 @@ The parser you're going to write is a **recursive descent parser**. It’ll be a
 You'll start by parsing `let` and `return` statements. Then, you'll move on to parsing expressions. After that, you'll extend the parser so it can parse a large subset of the Monkey programming language. As you go, you'll build up the necessary structures for your AST.
 
 ## Parser's First Steps: Parsing let Statements
+
+In Monkey, variable bindings look like this:
+
+```go
+let x = 5;
+let y = 10;
+let foobar = add(5, 5);
+let barfoo = 5 * 5 / 10 + 18 - add(5, 5) + multiply(124);
+let anotherName = barfoo;
+```
+
+You'll start by parsing `let` statements. For now, you don't need to think about the expressions that produce the value being assigned. You need to  define the necessary parts of an AST that can represent `let` statements.
+
+Look at how this Monkey program is structured:
+
+```
+let x = 10;
+let y = 15;
+
+let add = fn(a, b) {
+    return a + b;
+};
+```
+
+The `let` statements above fit the following pattern: `let <identifier> = <expression>;` In general, expressions produce values, but statements don’t. Your AST needs two different types of nodes:
+
+- Expressions
+- Statements
+
+Now you can start making `ast.go`:
+
+```go
+// ast/ast.go
+
+package ast
+
+type Node interface {
+    TokenLiteral() string
+}
+
+type Statement interface {
+    Node
+    statementNode()
+}
+
+type Expression interface {
+    Node
+    expressionNode()
+}
+```
+
+You have three interfaces:
+- **`Node`:** All nodes in your AST must implement the `Node` interface. They need to have a `TokenLiteral()` method that returns the literal value of the token it’s associated with. `TokenLiteral()` will be used only for debugging
+and testing.
+- **`Statement` and `Expression`:** Some of these nodes implement the `Statement` or `Expression` interfaces. These interfaces just have dummy methods called `statementNode()` and `expressionNode()`.
+
 ## Parsing return Statements
 ## Parsing Expressions
 ### Expressions in Monkey
