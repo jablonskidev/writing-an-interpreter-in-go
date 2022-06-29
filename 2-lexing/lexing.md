@@ -146,7 +146,7 @@ func TestNextToken(t *testing.T) {
 
 This test checks a small subset of the tokens (`=+(){},;`).
 
-Now that you have a test, you can start working on the lexer itself. Write a function called `New()` that will return `*Lexer`.
+Now that you have a test, you can start working on the lexer itself. Write a function called `New()` that will return `*Lexer`:
 
 ```go
 // lexer/lexer.go
@@ -819,4 +819,4 @@ Feel free to type in commands
 >>
 ```
 
-Your next step is to parse tokens.
+Your next step is to parse tokens in the [Parsing chapter](https://github.com/jablonskidev/writing-an-interpreter-in-go/blob/main/3-parsing/parsing.md).
