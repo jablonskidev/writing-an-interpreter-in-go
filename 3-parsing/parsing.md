@@ -56,7 +56,7 @@ You'll start by parsing `let` and `return` statements. Then, you'll move on to p
 
 In Monkey, variable bindings look like this:
 
-```go
+```
 let x = 5;
 let y = 10;
 let foobar = add(5, 5);
