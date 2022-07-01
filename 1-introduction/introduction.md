@@ -47,3 +47,5 @@ You'll need only:
 - The Go programming language
 
 As of March 2022, the latest version of the book uses Go 1.14.
+
+Your next step is to learn about lexing in the [Lexing chapter](https://github.com/jablonskidev/writing-an-interpreter-in-go/blob/main/2-lexing/lexing.md).
