@@ -30,7 +30,7 @@ You can read through these study notes and see the code for each section:
 
 ## What Else Do I Do?
 
-I work in developer education because I like code, words, and people.
+I help developers learn because I like code, words, and people.
 
 Feel free to reach out:
 - [jojab.dev](https://jojab.dev)
