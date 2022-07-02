@@ -27,3 +27,13 @@ You can read through these study notes and see the code for each section:
 | 3     | [Parsing](https://github.com/jablonskidev/writing-an-interpreter-in-go/blob/main/3-parsing/parsing.md)                   | Code |
 | 4     | Evaluation                | Code |
 | 5     | Extending the Interpreter | Code |
+
+## What Else Do I Do?
+
+I work in developer education because I like code, words, and people.
+
+Feel free to reach out:
+- [jojab.dev](https://jojab.dev)
+- [Twitter](https://twitter.com/Jo_Jablonski)
+- [GitHub](https://github.com/jablonskidev)
+- [LinkedIn](https://www.linkedin.com/in/joanna-jablonski-14b9a7140/)
